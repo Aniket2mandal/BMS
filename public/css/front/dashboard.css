@@ -1,0 +1,66 @@
+  /* Hero */
+  .hero {
+    background: url('/images/Front/mainimage.jpg') no-repeat center center/cover;
+    height: 400px;
+    position: relative;
+}
+
+.overlay {
+    background: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.hero-content {
+    width: 100%;
+}
+
+.hero-content h1 {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.hero-content h1 span {
+    color: #ff1e1e;
+}
+
+.hero-content p {
+    margin: 15px 0;
+    font-size: 14px;
+}
+
+.hero-content .red {
+    color: red;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.signup {
+    background: #2e4a5b;
+    color: white;
+}
+
+.login {
+    background: red;
+    color: white;
+}
+
+/* Grey strip */
+.grey-strip {
+
+    margin-bottom:20px;
+}
