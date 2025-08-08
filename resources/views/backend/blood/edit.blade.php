@@ -12,7 +12,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{route('blood.index')}}">Bloods</a></li>
-                    <li class="breadcrumb-item active">Create</li>
+                    <li class="breadcrumb-item active">Edit</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -25,7 +25,7 @@
     <div class="card card-primary card-outline mb-4">
         <!--begin::Header-->
         <div class="card-header ">
-            <div class="card-title">Create Blood</div>
+            <div class="card-title">Edit Blood</div>
         </div>
         <!--end::Header-->
         <!--begin::Form-->

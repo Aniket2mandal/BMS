@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Blood;
+use App\Models\Bloodbank;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,17 +15,16 @@ class UserController extends Controller
 {
     public function index()
     {
-        $user = User::where('email', '!=', 'super@gmail.com')->where('email', '!=', auth()->user()->email)->latest()->paginate(20);
+        $user = User::where('email', '!=', 'super@gmail.com')->where('email', '!=', auth()->user()->email)->latest()->paginate(10);
         return view('backend.user.index', compact('user'));
     }
-
-
 
     
     public function create()
     {
         $roles = Role::all();
-        return view('backend.user.create',compact('roles'));
+        $bloodbank=Bloodbank::where('status',1)->get();
+        return view('backend.user.create',compact('roles','bloodbank'));
     }
 
 
@@ -36,7 +37,8 @@ class UserController extends Controller
             'password' => 'required|min:8|confirmed', // No need for custom rules here
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'Status' => 'integer',
-            'Role' => 'required|array'
+            'Role' => 'required|array',
+            'bloodbank' => 'required|integer'
         ]);
         // dd($request->all());
         // dd($request->Role);
@@ -59,6 +61,8 @@ class UserController extends Controller
         $user->assignRole($request->Role);
         $user->Status = $request->Status;
         $user->save();
+        $user->bloodBank()->sync($request->bloodbank);
+       
         return redirect()->route('user.index')->with('success', $request->Name . ' ' . 'User Created Successfully with Role');
     }
 
@@ -68,7 +72,8 @@ class UserController extends Controller
         $user = User::find($id);
         // dd($user->roles);
         $roles = Role::all();
-        return view('backend.user.edit', compact('user', 'roles'));
+        $bloodbank=Bloodbank::where('status',1)->get();
+        return view('backend.user.edit', compact('user', 'roles', 'bloodbank'));
     }
 
     public function update(Request $request, $id)
@@ -82,7 +87,8 @@ class UserController extends Controller
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'existing_image' => 'nullable|string',
                 'Status' => 'integer',
-                'Role' => 'required|array'
+                'Role' => 'required|array',
+                 'bloodbank' => 'required|integer'
             ]);
         } else {
             // dd($request->all());
@@ -93,7 +99,8 @@ class UserController extends Controller
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'existing_image' => 'nullable|string',
                 'Status' => 'integer',
-                'Role' => 'required|array'
+                'Role' => 'required|array',
+                 'bloodbank' => 'required|integer'
             ]);
             // dd($request->all());
         }
@@ -132,6 +139,7 @@ class UserController extends Controller
         }
         $user->assignRole($request->Role);
         $user->Status = $request->Status;
+        $user->bloodBank()->sync($request->bloodbank);
         $user->save();
 
         return redirect()->route('user.index')->with('success', $request->Name . ' ' . 'User Updated Successfully with Role');

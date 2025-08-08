@@ -14,7 +14,7 @@ class DashboardFrontController extends Controller
         $today = Carbon::today();
 
     $pastCamps = Camp::with('bloodBanks')
-        ->whereDate('date', '<', $today)
+        ->whereDate('date', '<', $today)->where('status', 1)
         ->latest()
         ->get();
 

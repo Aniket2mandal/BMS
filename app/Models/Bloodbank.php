@@ -18,5 +18,9 @@ class Bloodbank extends Model
         return $this->belongsToMany(Donor::class, 'donor_bloodbanks');
     }
 
-    
+    public function user()
+{
+    return $this->belongsToMany(User::class, 'blood_bank_user', 'blood_bank_id', 'user_id')->withTimestamps()->as('pivot')->limit(1);
+}
+
 }

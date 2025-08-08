@@ -12,7 +12,7 @@ class BloodbankController extends Controller
 {
     public function index()
     {
-        $bloodbanks = Bloodbank::all();
+        $bloodbanks = Bloodbank::paginate(10);
         return view('backend.bloodbank.index', compact('bloodbanks'));
     }
 

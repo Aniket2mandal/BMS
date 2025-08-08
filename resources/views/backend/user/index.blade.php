@@ -40,13 +40,13 @@
     <div class="card-tools">
         <!-- <div class="input-group input-group-sm" style="width: 150px;"> -->
         <!-- <input type="text" name="table_search" class="form-control float-right" placeholder="Search" /> -->
-   
+     @can('create-user', App\Models\User::class)
         <div class="input-group-append">
             <a href="{{route('user.create')}}" type="submit" class="btn btn-success">
                 Add New User <i class="fas fa-plus"></i>
             </a>
-    
         </div>
+        @endcan
         <!-- </div> -->
     </div>
 </div>
@@ -74,12 +74,14 @@
                 <td>{{$users->name}}</td>
                 <td>{{$users->email}}</td>
                 <td>
+                    @can('change-user-status', $users)
                     <div class="form-group ">
                         <!-- Toggle switch (default checked for Active) -->
                         <input type="hidden" name="Status" class="Status" value="0">
                         <input type="checkbox" name="Status" class="Status" data-id="{{$users->id}}" data-toggle="toggle" data-on="Active" data-off="Inactive" data-onstyle="success" data-offstyle="danger" value="1" {{ old('Status',$users->status) ? 'checked' : '' }}>
                         <!-- <small class="form-text text-muted">Switch to set the status to active or inactive</small> -->
                     </div>
+                    @endcan
                 </td>
                 <td>
 
@@ -90,17 +92,17 @@
                     @endif
                 </td>
                 <td>
-             
+             @can('edit-user', $users)
                     <a href="{{route('user.edit',$users->id)}}" class="btn btn-primary btn-sm me-2 d-inline">
-                        <i class="fas fa-pencil-alt"></i> <b>Edit</b>
+                        <i class="fas fa-pencil-alt"></i> 
                     </a>
-         
+         @endcan
                     <!-- <a href="{{route('user.delete',$users->id)}}" class="btn btn-danger btn-sm d-inline">
                         <i class="fas fa-trash"></i> <b>Delete</b>
                     </a> -->
-                 
-                    <button id="delete" data-id="{{ $users->id }}" class="delete-btn btn btn-danger btn-sm"><i class="fas fa-trash"></i> <b>Delete</b></button>
-          
+                 @can('delete-user', $users)
+                    <button id="delete" data-id="{{ $users->id }}" class="delete-btn btn btn-danger btn-sm"><i class="fas fa-trash"></i> </button>
+          @endcan
                 </td>
             </tr>
             @endforeach

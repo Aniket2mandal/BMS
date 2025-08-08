@@ -42,4 +42,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function bloodBank()
+    {
+        return $this->belongsToMany(Bloodbank::class, 'blood_bank_user', 'user_id', 'blood_bank_id')->withTimestamps()->as('pivot')->limit(1);
+    }
 }

@@ -21,12 +21,13 @@
 <div class="card mt-4">
     <div class="card-header">
         <h3 class="card-title mt-4">Blood Bank List</h3>
-
+        @can('create-bloodbank', App\Models\Bloodbank::class)
         <div class="card-tools mt-4">
             <a href="{{ route('bloodbank.create') }}" class="btn btn-success">
                 Add New BloodBank<i class="fas fa-plus"></i>
             </a>
         </div>
+        @endcan
 
 
     </div>
@@ -40,6 +41,7 @@
                     <th>Slug</th>
                     <th>Address</th>
                     <th>Description</th>
+                    
                     <th>Status</th>
                     <th>Image</th>
                     <th>Action</th>
@@ -57,12 +59,14 @@
                     <td>{{$bloodbank->city}},{{ $bloodbank->district }},{{ $bloodbank->state }}</td>
                     <td>{!! Str::limit($bloodbank->description, 50) !!}</td>
                     <td>
+                        @can('change-bloodbank-status', $bloodbank)
                         <div class="form-group ">
                             <!-- Toggle switch (default checked for Active) -->
                             <input type="hidden" name="status" class="Status" value="0">
                             <input type="checkbox" name="status" class="Status" data-id="{{$bloodbank->id}}" data-toggle="toggle" data-on="Active" data-off="Inactive" data-onstyle="success" data-offstyle="danger" value="1" {{ old('status',$bloodbank->status) ? 'checked' : '' }}>
                             <!-- <small class="form-text text-muted">Switch to set the status to active or inactive</small> -->
                         </div>
+                        @endcan
                     </td>
                     <td>
                         @if($bloodbank->image)
@@ -72,12 +76,14 @@
                         @endif
                     </td>
                     <td class="">
-
+                     @can('edit-bloodbank', $bloodbank)
                         <a href="{{route('bloodbank.edit',$bloodbank->slug)}}" class="btn btn-primary btn-sm me-2">
-                            <i class="fas fa-pencil-alt"></i> <b>Edit</b>
+                            <i class="fas fa-pencil-alt"></i> 
                         </a>
-
-                        <button id="delete" data-id="{{$bloodbank->id}}" class="delete-btn btn btn-danger btn-sm"><i class="fas fa-trash"></i> <b>Delete</b></button>
+                     @endcan
+                     @can('delete-bloodbank', $bloodbank)
+                        <button id="delete" data-id="{{$bloodbank->id}}" class="delete-btn btn btn-danger btn-sm"><i class="fas fa-trash"></i> </button>
+                    @endcan
                     </td>
                 </tr>
                 @endforeach
@@ -85,6 +91,7 @@
         </table>
         <!-- Pagination -->
         <div class="card-footer clearfix">
+            {{ $bloodbanks->links('pagination::bootstrap-4') }}
         </div>
     </div>
 

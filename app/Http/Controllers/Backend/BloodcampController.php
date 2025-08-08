@@ -9,15 +9,17 @@ use Illuminate\Http\Request;
 class BloodcampController extends Controller
 {
     public function index(){
-        $camps=Camp::with('bloodBanks')->get();
+        $camps=Camp::with('bloodBanks')->paginate(10);
         // dd($camps);
         return view('backend.bloodcamps.index',compact('camps'));
     }
 
     public function create(){
         $camps=null;
-        $bloodbanks=Bloodbank::where('status',1)->get();
-        return view('backend.bloodcamps.create',compact('camps','bloodbanks'));
+        $bloodbank=Bloodbank::where('status',1)->get();
+        $user = auth()->user();
+        $userBloodBanks = $user->bloodBank()->where('status', 1)->get();
+        return view('backend.bloodcamps.create',compact('camps','userBloodBanks','bloodbank'));
     }
 
     public function store(Request $request){
@@ -66,13 +68,16 @@ class BloodcampController extends Controller
     }
 
     public function edit($id){
-
+      
         $camps=Camp::with('bloodBanks')->find($id);
         $bloodbanks=Bloodbank::where('status',1)->get();
-        return view('backend.bloodcamps.edit',compact('camps','bloodbanks'));
+        $user = auth()->user();
+        $userBloodBanks = $user->bloodBank()->where('status', 1)->get();
+        return view('backend.bloodcamps.edit',compact('camps','userBloodBanks','bloodbanks'));
     }
 
     public function update(Request $request, $id){
+        // dd($request->all());
         $request->validate([
             'name'=>'required|string|max:255',
             'address'=>'required|string|max:255',
