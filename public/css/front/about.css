@@ -1,0 +1,9 @@
+.card-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.card-body p {
+    font-size: 0.95rem;
+    color: #333;
+}
