@@ -99,7 +99,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/blood/update/{id}', [BloodController::class, 'update'])->name('blood.update');
     Route::get('/blood/delete/{id}', [BloodController::class, 'delete'])->name('blood.delete');
     Route::post('/blood/status/{id}', [BloodController::class, 'status'])->name('blood.status');
-
+    Route::post('/blood/addbloodquantity/', [BloodController::class, 'addBloodQuantity'])->name('blood.addbloodquantity');
 
 
       // BLOOD BANK

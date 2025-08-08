@@ -20,13 +20,14 @@
     <div class="card mt-4">
         <div class="card-header">
             <h3 class="card-title mt-4">Blood Camp List</h3>
-
+ 
+            @can('create-camp', App\Models\BloodCamp::class)
             <div class="card-tools mt-4">
                 <a href="{{ route('bloodcamp.create') }}" class="btn btn-success">
                     Add New BloodCamp<i class="fas fa-plus"></i>
                 </a>
             </div>
-
+@endcan
 
         </div>
 
@@ -62,15 +63,17 @@
                                 @endforeach
                             </td>
                             <td>
-                                <div class="form-group ">
-                                    <!-- Toggle switch (default checked for Active) -->
-                                    <input type="hidden" name="status" class="Status" value="0">
-                                    <input type="checkbox" name="status" class="Status" data-id="{{ $camp->id }}"
-                                        data-toggle="toggle" data-on="Active" data-off="Inactive" data-onstyle="success"
-                                        data-offstyle="danger" value="1"
-                                        {{ old('status', $camp->status) ? 'checked' : '' }}>
-                                    <!-- <small class="form-text text-muted">Switch to set the status to active or inactive</small> -->
-                                </div>
+                                @can('change-camp-status', $camp)
+                                    <div class="form-group ">
+                                        <!-- Toggle switch (default checked for Active) -->
+                                        <input type="hidden" name="status" class="Status" value="0">
+                                        <input type="checkbox" name="status" class="Status" data-id="{{ $camp->id }}"
+                                            data-toggle="toggle" data-on="Active" data-off="Inactive" data-onstyle="success"
+                                            data-offstyle="danger" value="1"
+                                            {{ old('status', $camp->status) ? 'checked' : '' }}>
+                                        <!-- <small class="form-text text-muted">Switch to set the status to active or inactive</small> -->
+                                    </div>
+                                @endcan
                             </td>
                             <td>
                                 @if ($camp->image)
@@ -84,14 +87,16 @@
                             <td>{{ $camp->date }}</td>
                             <td>{{ $camp->time }}</td>
                             <td class="">
-
-                                <a href="{{ route('bloodcamp.edit', $camp->id) }}" class="btn btn-primary btn-sm me-2">
-                                    <i class="fas fa-pencil-alt"></i> <b>Edit</b>
-                                </a>
-
-                                <button id="delete" data-id="{{ $camp->id }}"
-                                    class="delete-btn btn btn-danger btn-sm"><i class="fas fa-trash"></i>
-                                    <b>Delete</b></button>
+                                @can('edit-camp', $camp)
+                                    <a href="{{ route('bloodcamp.edit', $camp->id) }}" class="btn btn-primary btn-sm me-2">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                @endcan
+                                @can('delete-camp', $camp)
+                                    <button id="delete" data-id="{{ $camp->id }}"
+                                        class="delete-btn btn btn-danger btn-sm"><i class="fas fa-trash"></i>
+                                    </button>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach
@@ -99,6 +104,7 @@
             </table>
             <!-- Pagination -->
             <div class="card-footer clearfix">
+                {{ $camps->links('pagination::bootstrap-4') }}
             </div>
         </div>
 

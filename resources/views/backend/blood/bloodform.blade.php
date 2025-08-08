@@ -18,14 +18,14 @@
 </div>
 
 
-<div class="mb-3">
+{{-- <div class="mb-3">
     {!! Form::label('quantity', 'Quantity', ['class' => 'form-label']) !!}
-    {!! Form::number('quantity', old('quantity',  $quantity ?? null), ['class' => 'form-control', 'id' => 'quantity', 'rows' => 3]) !!}
-    {{-- Error Message --}}
+    {!! Form::number('quantity', old('quantity',  $quantity ?? null), ['class' => 'form-control', 'id' => 'quantity', 'rows' => 3,]) !!}
+
     @error('quantity')
     <div class="text-danger">{{ $message }}</div>
     @enderror
-</div>
+</div> --}}
 
 <div class="mb-3">
     {!! Form::label('description', 'Description', ['class' => 'form-label']) !!}
@@ -54,6 +54,8 @@
     @enderror
 </div>
 
+{{-- 
+@if(auth()->user() && auth()->user()->hasRole('Admin'))
 <div class="mb-3">
     {!! Form::label('bloodbank', 'Blood Banks', ['class' => 'form-label']) !!}
     {!! Form::select('bloodbank[]', $bloodbank->pluck('name','id'), old('bloodbank',isset($blood) ? $blood->bloodBanks->pluck('id')->toArray() : []), [
@@ -67,3 +69,17 @@
     @enderror
 </div>
 
+@else
+<div class="mb-3">
+    {!! Form::label('bloodbank', 'Blood Banks', ['class' => 'form-label']) !!}
+    {!! Form::select('bloodbank[]', $userBloodBanks->pluck('name','id'), old('bloodbank',isset($blood) ? $userBloodBanks->pluck('id')->toArray() : []), [
+        'class' => 'form-control select2',
+        'id' => 'Permission',
+        'multiple' => 'multiple'
+    ]) !!}
+
+    @error('bloodbank')
+    <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
+@endif --}}

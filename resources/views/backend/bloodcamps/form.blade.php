@@ -65,17 +65,34 @@
     @enderror
 </div>
 
+@if(auth()->user() && auth()->user()->hasRole('Admin'))
 <div class="mb-3">
-        {!! Form::label('bloodbank', 'Blood Banks', ['class' => 'form-label']) !!}
-        {!! Form::select('bloodbank', $bloodbanks->pluck('name', 'id'), old('bloodbank',isset($camps)?$camps->bloodBanks->pluck('id')->first():null), [
-            'class' => 'form-control',
-            'id' => 'bloodbank',
-        ]) !!}
-    
-        @error('bloodbank')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
+    {!! Form::label('bloodbank', 'Blood Banks', ['class' => 'form-label']) !!}
+    {!! Form::select('bloodbank[]', $bloodbank->pluck('name','id'), old('bloodbank',isset($blood) ? $blood->bloodBanks->pluck('id')->toArray() : []), [
+        'class' => 'form-control select2',
+        'id' => 'Permission',
+        'multiple' => 'multiple'
+    ]) !!}
+
+    @error('bloodbank')
+    <div class="text-danger">{{ $message }}</div>
+    @enderror
 </div>
+
+@else
+<div class="mb-3">
+    {!! Form::label('bloodbank', 'Blood Banks', ['class' => 'form-label']) !!}
+    {!! Form::select('bloodbank', $userBloodBanks->pluck('name','id'), old('bloodbank',isset($blood) ? $userBloodBanks->pluck('id'): null), [
+        'class' => 'form-control',
+        'id' => 'bloodbank',
+    ]) !!}
+
+    @error('bloodbank')
+    <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
+
+@endif
 
 <div class="mb-3">
     {!! Form::label('date','Date',['class'=>'form-label']) !!}

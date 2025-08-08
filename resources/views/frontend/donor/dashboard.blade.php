@@ -54,7 +54,7 @@
                         <tr class="text-center">
                             <td>{{ $bloodbank->pivot->donation_date }}</td>
                             <td>{{ $bloodbank->name }}</td>
-                            <td>{{ $bloodbank->address }}</td>
+                            <td>{{ $bloodbank->city }},{{ $bloodbank->district }}</td>
                             <td>{{ $donor->blood }}</td>
                             <td><span class="badge text-bg-success">Approved</span></td>
                         </tr>

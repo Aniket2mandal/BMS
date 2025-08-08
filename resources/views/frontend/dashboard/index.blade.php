@@ -6,7 +6,7 @@
     <section class="hero">
         <div class="overlay">
             <div class="container hero-content">
-                <h1>There is not <br><span>Substitute for blood</span></h1>
+                <h1>There is no <br><span>Substitute for blood</span></h1>
                 <p>Your blood can give someone a second chance at life.
                     Donate today and be a hero to those in need. <br>
                     Every donation saves lives, supports surgeries, and aids patients battling serious illnesses.

@@ -42,12 +42,13 @@
                     Cancel
                 </button>
             </form>
-
-            <div class="input-group-append">
-                <a href="{{ route('donor.create') }}" class="btn btn-success">
-                    Add New Donor <i class="fas fa-plus"></i>
-                </a>
-            </div>
+            @can('create-donor', App\Models\Donor::class)
+                <div class="input-group-append">
+                    <a href="{{ route('donor.create') }}" class="btn btn-success">
+                        Add New Donor <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+            @endcan
         </div>
     </div>
 
@@ -83,8 +84,14 @@
                             <td>{{ $donors->phone }}</td>
                             <td>{{ $donors->address }}</td>
                             <td>{{ implode(', ', json_decode($donors->allergy)) }}</td>
-                            <td>{{ $donors->blood }}</td>
-                            <td>{{ $donors->quantity_donated }}</td>
+                            <td>{{ $donors->blood }} </td>
+                            <td>
+                                @if ($donors->bloodBanks)
+                                    @foreach ($donors->bloodBanks as $bloodbank)
+                                        {{ $bloodbank->pivot->quantity_donated ?? 0}} Pints<br>
+                                    @endforeach
+                                @endif
+                            </td>
                             <td>
                                 @if ($donors->bloodBanks)
                                     @foreach ($donors->bloodBanks as $bloodbank)
@@ -95,22 +102,24 @@
                             </td>
                             <td>
                                 @if ($donors->bloodBanks)
-                                @foreach ($donors->bloodBanks as $bloodbank)
-                                {{ $bloodbank->pivot->donation_date }}<br>
-                                @endforeach
+                                    @foreach ($donors->bloodBanks as $bloodbank)
+                                        {{ $bloodbank->pivot->donation_date }}<br>
+                                    @endforeach
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('donor.edit', $donors->id) }}"
-                                    class="btn btn-primary btn-sm me-2 d-inline">
-                                    <i class="fas fa-pencil-alt"></i> <b>Edit</b>
-                                </a>
-                                <button id="delete" data-id="" class="delete-btn btn btn-danger btn-sm"><i
-                                        class="fas fa-trash"></i> <b>Delete</b></button>
-
+                                @can('add-bloodbank',$donors)
                                 <button class="btn btn-success btn-sm addbloodbank" data-id="{{ $donors->id }}"
                                     data-email="{{ $donors->email }}" data-toggle="modal" data-target="#locationModal">
                                     <i class="fas fa-plus"></i> <b>Add Bloodbank</b></button>
+                                @endcan
+                                
+                                @can('edit-donor', $donors)
+                                    <a href="{{ route('donor.edit', $donors->id) }}"
+                                        class="btn btn-primary btn-sm me-2 d-inline">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                @endcan
 
                             </td>
                         </tr>
@@ -140,12 +149,20 @@
                                     placeholder="Enter email">
                             </div>
                             <div class="mb-3">
-                                <label for="state" class="form-label">password</label>
+                                <label for="Quantity" class="form-label">Quantity</label>
+                                <input type="text" class="form-control" name="quantity" id="quantity"
+                                    placeholder="10 units">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="state" class="form-label">Blood Bank</label>
                                 <select class="form-control" name="bloodbank" id="bloodbank">
                                     <option value="" disabled selected>Select Blood Bank</option>
                                     {{-- <pre>{{ var_dump($bloodbank) }}</pre> --}}
-                                    @foreach ($bloodbanks as $bank)
-                                        <option value="{{ $bank->id }}">{{ $bank->name }}</option>
+                                    @foreach ($userBloodBanks as $bank)
+                                        <option value="{{ $bank->id }}"
+                                            {{ old('bloodbank', isset($bank) ? 'selected' : '') }}>{{ $bank->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -169,7 +186,7 @@
 
     <!-- Pagination -->
     <div class="card-footer clearfix">
-
+        {{ $donor->links('pagination::bootstrap-4') }}
     </div>
     </div>
 
@@ -306,10 +323,10 @@
                                             <td>${donor.donation_date ?? '-'}</td>
                                             <td>
                                                 <a href="/donor/${donor.id}/edit" class="btn btn-primary btn-sm me-2 d-inline">
-                                                    <i class="fas fa-pencil-alt"></i> <b>Edit</b>
+                                                    <i class="fas fa-pencil-alt"></i> 
                                                 </a>
                                                 <button class="delete-btn btn btn-danger btn-sm" data-id="${donor.id}">
-                                                    <i class="fas fa-trash"></i> <b>Delete</b>
+                                                    <i class="fas fa-trash"></i>
                                                 </button>
                                                 <button class="btn btn-success btn-sm">
                                                     <i class="fas fa-plus"></i> <b>Add Bloodbank</b>

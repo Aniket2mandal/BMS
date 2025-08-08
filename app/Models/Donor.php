@@ -24,7 +24,7 @@ class Donor extends Authenticatable
 
     public function bloodBanks()
     {
-        return $this->belongsToMany(Bloodbank::class, 'donor_bloodbanks')->withPivot('donation_date')->withTimestamps();
+        return $this->belongsToMany(Bloodbank::class, 'donor_bloodbanks')->withPivot('donation_date','quantity_donated')->withTimestamps();
     }
     
 }

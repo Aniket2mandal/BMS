@@ -117,6 +117,24 @@
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+
+
+                <div class="mb-3">
+                    <label for="Bloodbank" class="form-label">Select Bloodbank</label>
+                    <select name="bloodbank" id="bloodbank" class="form-control" >
+                        @foreach($bloodbank as $bloodbanks)
+                        <option value="{{ $bloodbanks->id }}"
+                            {{ $bloodbanks->id, old('bloodbank', '') ? 'selected' : '' }}>
+                            {{ $bloodbanks->name }}
+                        </option>
+                        @endforeach
+                    </select>
+
+                    {{-- Error Message --}}
+                    @error('bloodbank')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
             <!--end::Body-->
 

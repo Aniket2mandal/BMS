@@ -16,18 +16,23 @@ class DonorController extends Controller
 
         // $bloodbank
     // $donor=Donor::with('');
-    $donor=Donor::with('bloodBanks:name')->latest()->get();
-    $bloodbanks=Bloodbank::where('status',1)->get();
+    $donor=Donor::with('bloodBanks')->latest()->paginate(10);
+    // $bloodbanks=Bloodbank::where('status',1)->get();
+    $user = auth()->user();
+    $userBloodBanks = $user->bloodBank()->where('status', 1)->get();
+    
     // dd($bloodbank);
 
-    return view('backend.donor.index',compact('donor','bloodbanks'));
+    return view('backend.donor.index',compact('donor','userBloodBanks'));
     }
 
     public function create(){
-        $bloodbank=Bloodbank::where('status',1)->get();
+        // $bloodbank=Bloodbank::where('status',1)->get();
         $donor=null;
+        $user = auth()->user();
+        $userBloodBanks = $user->bloodBank()->where('status', 1)->get();
         // dd($bloodbank);
-        return view('backend.donor.create',compact('bloodbank','donor'));
+        return view('backend.donor.create',compact('userBloodBanks','donor'));
     }
 
     public function store(Request $request){
@@ -55,10 +60,10 @@ class DonorController extends Controller
         $donor->password = Hash::make($request->password);
         $donor->allergy = json_encode($request->allergies);
         $donor->blood = $request->bloodgroup;
-        $donor->quantity_donated = $request->quantity;
+        // $donor->quantity_donated = $request->quantity;
         $donor->save();
         $donor->bloodBanks()->sync([
-            $request->bloodbank => ['donation_date' => $request->date]
+            $request->bloodbank => ['donation_date' => $request->date, 'quantity_donated' => $request->quantity]
         ]);
         return redirect()->route('donor.index')->with('success', 'Donor created successfully');
     }
@@ -67,11 +72,15 @@ class DonorController extends Controller
  
         $donor=Donor::with('bloodBanks')->find($id);
         // dd($donor);
-        $bloodbank=Bloodbank::where('status',1)->get();
-        return view('backend.donor.edit',compact('donor','bloodbank'));
+        // $bloodbank=Bloodbank::where('status',1)->get();
+        $user = auth()->user();
+        $userBloodBanks = $user->bloodBank()->where('status', 1)->get();
+        return view('backend.donor.edit',compact('donor','userBloodBanks'));
     }
 
     public function update(Request $request,$id){
+        
+        // dd($request->all());
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email',
@@ -81,13 +90,14 @@ class DonorController extends Controller
             // 'status' => 'required|integer',
             'allergies' => 'required|array',
             'bloodgroup' => 'required|string',
-            'quantity' => 'required|integer',
-            'bloodbank' => 'required|integer',
-            'date'=>'required|date',
+            // 'quantity' => 'required|integer',
+            // 'bloodbank' => 'required|integer',
+            // 'date'=>'required|date',
         ]);
 
-        // dd($request->all());
         $donor = Donor::find($id);
+        $exists = $donor->bloodBanks()->where('bloodbank_id', $request->bloodbank)->exists();
+   
         $donor->name = $request->name;
         $donor->email = $request->email;
         $donor->phone = $request->phone;
@@ -97,11 +107,11 @@ class DonorController extends Controller
         }
         $donor->allergy = json_encode($request->allergies);
         $donor->blood = $request->bloodgroup;
-        $donor->quantity_donated = $request->quantity;
+        // $donor->quantity_donated = $request->quantity;
         $donor->save();
-        $donor->bloodBanks()->sync([
-            $request->bloodbank => ['donation_date' => $request->date]
-        ]);
+        // $donor->bloodBanks()->sync([
+        //     $request->bloodbank => ['donation_date' => $request->date, 'quantity_donated' => $request->quantity]
+        // ]);
         
         return redirect()->route('donor.index')->with('success', 'Donor updated successfully');
     }
@@ -134,12 +144,13 @@ class DonorController extends Controller
         // dd($request->all());
         $request->validate([
             'email' => 'required|string|email',
+            'quantity' => 'required|integer',
             'bloodbank' => 'required|integer|exists:bloodbanks,id',
         ]);
         // dd($request->all());
         $donor = Donor::where('email', $request->email)->first();
         // dd($donor); 
-        $donor->bloodBanks()->attach($request->bloodbank, ['donation_date' => $request->date]);
+        $donor->bloodBanks()->attach($request->bloodbank, ['donation_date' => $request->date,'quantity_donated' => $request->quantity,]);
         return response()->json([
             'success' => true,
             'message' => 'Blood bank added successfully'

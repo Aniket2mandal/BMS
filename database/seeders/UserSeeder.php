@@ -18,10 +18,10 @@ class UserSeeder extends Seeder
     public function run()
     {
         $password=Hash::make('password');
-        $adminUser = User::create(['name' => 'super admin','email'=>'super@gmail.com','password'=>$password,'status'=>1]);
-        $adminUser->syncRoles('super admin');
+        $adminUser = User::create(['name' => 'Admin','email'=>'admin@gmail.com','password'=>$password,'status'=>1]);
+        $adminUser->syncRoles('Admin');
         $permissions = Permission::all();
-        $role = Role::where('name', 'Super Admin')->first();
+        $role = Role::where('name', 'Admin')->first();
         if($role){
             $role->syncPermissions($permissions);
             }
